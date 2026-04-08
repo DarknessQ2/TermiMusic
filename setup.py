@@ -1,37 +1,36 @@
 import os
-import sys
 from setuptools import setup
 from setuptools.command.install import install
 
 class PostInstallCommand(install):
-    """Clase para configurar el PATH automáticamente después de la instalación."""
+    """Configura automáticamente el PATH en la shell del usuario tras la instalación."""
     def run(self):
         install.run(self)
-        # Directorio donde se instalan los binarios de usuario
         user_bin = os.path.expanduser("~/.local/bin")
+        # Línea que exporta el PATH
         path_line = f'\n# TermiMusic Path\nexport PATH="{user_bin}:$PATH"\n'
-
-        # Archivos de configuración de shell a buscar
-        shells = [".bashrc", ".zshrc", ".bash_profile"]
-
-        for shell in shells:
-            config_path = os.path.expanduser(f"~/{shell}")
+        
+        # Detectar qué archivos de configuración existen en el HOME del usuario
+        configs = [".bashrc", ".zshrc", ".bash_profile", ".profile"]
+        
+        for config in configs:
+            config_path = os.path.expanduser(f"~/{config}")
             if os.path.exists(config_path):
                 try:
                     with open(config_path, "r") as f:
                         content = f.read()
-
-                    # Solo agregar si no existe ya en el archivo
+                    
+                    # Evitar duplicados: solo escribir si no está ya la ruta
                     if user_bin not in content:
                         with open(config_path, "a") as f:
                             f.write(path_line)
-                        print(f"\033[1;32m[+] Configurado {shell} automáticamente.\033[0m")
+                        print(f"\033[1;32m[+] PATH configurado en {config}\033[0m")
                 except Exception as e:
-                    print(f"\033[1;31m[!] Error al configurar {shell}: {e}\033[0m")
+                    print(f"\033[1;31m[!] No se pudo escribir en {config}: {e}\033[0m")
 
 setup(
     name='termimusic',
-    version='1.0.',
+    version='1.0.2',
     py_modules=['termimusic'],
     install_requires=[
         'Pillow>=9.0.0',
