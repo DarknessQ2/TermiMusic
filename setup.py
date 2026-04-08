@@ -4,7 +4,7 @@ setup(
     name='termimusic',
     version='1.0.0',
     description='A dynamic, riced terminal music player powered by MPV and CAVA.',
-    author='DarknessQ2', # Cámbialo por tu usuario de GitHub
+    author='DarknessQ2', 
     author_email='vendiluis11@gmail.com',
     py_modules=['termimusic'],
     install_requires=[
