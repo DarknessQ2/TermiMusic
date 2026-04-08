@@ -2,7 +2,9 @@
 
 A highly customizable, physics-driven terminal music player for Linux. Built for ricing environments (like custom Wayland window managers).
 
-![TermiMusic en acción](assets/aset1.png)
+<p align="center">
+  <img src="assets/aset1.png" alt="TermiMusic Screenshot" width="800">
+</p>
 
 ## Features
 * **Physics-based Disk Animation**: The ASCII disk rotation speed reacts to the bass frequencies of the song in real-time.
