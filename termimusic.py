@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ==========================================================
 # TermiMusic - Reproductor de Terminal Profesional
-# Autor: Luis (NeoSliceOS / Cintax Ecosystem)
+# Autor: DarknessQ2 
 # ==========================================================
 
 import subprocess, sys, time, os, json, fcntl, termios, tty, select, urllib.request, io, re, threading
