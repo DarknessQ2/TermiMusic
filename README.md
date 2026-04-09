@@ -23,7 +23,7 @@ sudo pacman -S mpv cava socat python
 
 1. Clone the repository:
 \`\`\`bash
-git clone https://github.com/YourUsername/TermiMusic.git
+git clone https://github.com/DarknessQ2/TermiMusic
 cd TermiMusic
 \`\`\`
 
