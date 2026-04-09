@@ -70,7 +70,7 @@ Categories=AudioVideo;Audio;Player;
             print("="*50 + "\033[0m")
             print("\033[1;36mVersión :\033[0m 1.0.1")
             print("\033[1;36mCreador :\033[0m DarknessQ2")
-            print("\033[1;36mContacto:\033[0m tu_correo@email.com")
+            print("\033[1;36mContacto:\033[0m vendiluis11@gmail.com")
             print("\033[1;32m" + "-" * 50 + "\033[0m")
 
             # Avisar si faltan programas del sistema
