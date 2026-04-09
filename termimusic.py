@@ -25,7 +25,7 @@ CAVA_CONF_PATH = "/tmp/termimusic_cava"
 os.makedirs(PLAYLIST_DIR, exist_ok=True)
 
 # --- DISCORD RICH PRESENCE ---
-ID_DISCORD = '1226912345678901234' # Puedes crear tu propia App en Discord Developer Portal
+ID_DISCORD = '1491690103125573643' # Tu ID Real
 RPC = None
 try:
     RPC = Presence(ID_DISCORD)
@@ -34,10 +34,10 @@ except:
     RPC = None
 
 # --- GESTIÓN DE PLAYLISTS ---
-def guardar_playlist(nombre, urls):
+def guardar_playlist(nombre, datos):
     ruta = os.path.join(PLAYLIST_DIR, f"{nombre}.json")
     with open(ruta, "w") as f:
-        json.dump(urls, f, indent=4)
+        json.dump(datos, f, indent=4, ensure_ascii=False)
 
 def cargar_playlist(nombre):
     ruta = os.path.join(PLAYLIST_DIR, f"{nombre}.json")
@@ -131,7 +131,7 @@ r"""
 """,
 r"""
                   .  ......... .
-                  ..+*#%%@@%###*...
+                 ..+*#%%@@%###*...
                ..*%@@@%@@@@@%#====+-..
            ...-#@@@@@@@@@@%##+====-==#...
             .@@@@@@@@@@@@@@%*+=+===--=+..
@@ -270,20 +270,31 @@ def main():
                         input_mode = False
                         pintar(37, 5, " "*80)
 
-                        # Comandos
+                        # --- COMANDOS DE PLAYLIST MODIFICADOS ---
                         if cmd.startswith("/save "):
                             nombre = cmd.split(" ", 1)[1]
                             pl = mpv_query("playlist") or []
-                            urls = [i.get("filename") for i in pl if i.get("filename")]
-                            if urls: guardar_playlist(nombre, urls)
+                            canciones = []
+                            for i in pl:
+                                url = i.get("filename")
+                                if url:
+                                    titulo = i.get("title") or url
+                                    canciones.append({"titulo": titulo, "url": url})
+                            if canciones: guardar_playlist(nombre, canciones)
+
                         elif cmd.startswith("/play "):
                             nombre = cmd.split(" ", 1)[1]
-                            urls = cargar_playlist(nombre)
-                            if urls:
+                            datos = cargar_playlist(nombre)
+                            if datos:
                                 mpv_command(["playlist-clear"])
-                                for u in urls: mpv_command(["loadfile", u, "append"])
+                                for item in datos:
+                                    # Funciona tanto con los nuevos JSON como con los viejos
+                                    url = item["url"] if isinstance(item, dict) else item
+                                    mpv_command(["loadfile", url, "append"])
                                 mpv_command(["playlist-play-index", 0])
                             else: msj_error = "❌ No existe esa playlist"; error_time = t_ahora
+                        # ----------------------------------------
+
                         elif cmd.startswith("/loop "):
                             m = cmd.split(" ")[1]
                             if m == "song": mpv_command(["set", "loop-file", "inf"]); modo_loop = "CANCION"
@@ -297,7 +308,34 @@ def main():
                         elif cmd.startswith("/color "):
                             c = cmd.split(" ", 1)[1]
                             if c.isdigit(): color_cava = c
-                        elif cmd: # Carga Directa
+
+                        elif cmd.startswith(("/remove ", "/quitar ", "/delete ")):
+                            parametro = cmd.split(" ", 1)[1].strip()
+                            if parametro.isdigit():
+                                indice = int(parametro)
+                                mpv_command(["playlist-remove", indice])
+                                msj_error = f"✅ Canción #{indice} eliminada de la cola"
+                                error_time = t_ahora
+                            else:
+                                ruta_pl = os.path.join(PLAYLIST_DIR, f"{parametro}.json")
+                                if os.path.exists(ruta_pl):
+                                    try:
+                                        os.remove(ruta_pl)
+                                        msj_error = f"✅ Playlist '{parametro}' eliminada del disco"
+                                        error_time = t_ahora
+                                    except:
+                                        msj_error = "❌ Error al borrar el archivo"
+                                        error_time = t_ahora
+                                else:
+                                    msj_error = "❌ No existe esa playlist"
+                                    error_time = t_ahora
+
+                        elif cmd in ["/refresh", "/limpiar", "/clear"]:
+                            print("\033[2J\033[H", end="")
+                            msj_error = "✨ Pantalla redibujada"
+                            error_time = t_ahora
+
+                        elif cmd:
                             if re.match(r"^(https?://|www\.)", cmd) or os.path.exists(os.path.expanduser(cmd)):
                                 mpv_command(["loadfile", cmd, "append-play"])
                     else: input_mode = True
@@ -325,12 +363,10 @@ def main():
             ruta_archivo = mpv_query("path")
             if ruta_archivo: actualizar_miniatura(ruta_archivo)
 
-            # Discord RPC (Cada 5s)
             if RPC and int(t_ahora) % 5 == 0:
                 try: RPC.update(state=f"Modo: {modo_loop.upper()}", details=media_title[:120], large_image="logo")
                 except: pass
 
-            # Datos CAVA
             try:
                 while True:
                     chunk = cava_proc.stdout.read(40)
@@ -350,23 +386,19 @@ def main():
             disco_f += disco_v * dt
 
             # --- 4. RENDERIZADO DE INTERFAZ ---
-            # Disco
             lines_disco = DISCO_ANIM[int(disco_f)%4].split("\n")
             for i, l in enumerate(lines_disco): pintar(2+i, 2, l, "\033[1;35m")
 
-            # Miniatura / Arte
             if arte_cache:
                 for i, l in enumerate(arte_cache): pintar(2+i, COL_R, l)
             else:
                 for i in range(13): pintar(2+i, COL_R, " "*48)
 
-            # Info de Canción
             y_base = 16
             pintar(y_base, COL_R, f"{'⏸ PAUSADO' if esta_pausado else '▶ SONANDO'} | LOOP: {modo_loop}", "\033[1;32m")
             pintar(y_base+1, COL_R, f"🎵 {scroll_texto(media_title, 48, t_ahora*4) if not esta_pausado else media_title[:48]}", "\033[1;37m")
             pintar(y_base+2, COL_R, f"🔊 VOL: {int(volumen)}%", "\033[1;36m")
 
-            # Barra de Progreso Expansiva
             if t_dur > 0:
                 columnas = os.get_terminal_size().columns
                 caja_t = f"|{format_tiempo(t_pos)}/-{format_tiempo(t_dur-t_pos)}|"
@@ -375,17 +407,14 @@ def main():
                 str_barra = f"|{'█'*prog}{'-'*(l_barra-prog)}| {caja_t}"
                 pintar(y_base+3, COL_R, f"{str_barra}{' '*(columnas-COL_R-len(str_barra))}", "\033[1;32m")
 
-            # Módulo de Sistema
             cpu, ram = psutil.cpu_percent(), psutil.virtual_memory().percent
             pintar(y_base+5, COL_R, "┌─[ TERMI-STATS ]", "\033[1;36m")
             pintar(y_base+6, COL_R, f"└─ CPU: {cpu:04.1f}% | RAM: {ram:04.1f}% | DSC: {'ON' if RPC else 'OFF'}", "\033[1;36m")
 
-            # Visualizador CAVA
             for b in range(len(raw_cava)):
                 h = int((raw_cava[b]/255)*8)
                 for r in range(8): pintar(33-r, 4+b, "┃" if r < h else " ", f"\033[38;5;{color_cava}m")
 
-            # Cola de Reproducción
             pintar(25, COL_R, "➔ COLA ACTUAL:", "\033[1;34m")
             idx_act = next((i for i, it in enumerate(cola) if it.get("current")), -1)
             sig = cola[idx_act:] if idx_act != -1 else []
@@ -395,13 +424,12 @@ def main():
                     pintar(26+i, COL_R+2, f"{'▶' if sig[i].get('current') else str(i)}. {str(t)[:44]:<44}", "\033[1;32m" if sig[i].get("current") else "\033[0;90m")
                 else: pintar(26+i, COL_R+2, " "*48)
 
-            # Footer / Controles
             if t_ahora - error_time < 3: pintar(34, 4, f" \033[41;37m {msj_error} \033[0m")
             else: pintar(34, 4, " "*70)
 
             txt_modo = "\033[42;30m [MODO ESCRITURA] \033[0m" if input_mode else "\033[44;30m [TermiMusic CONTROL] \033[0m Space: Pausa | '/': Comandos"
             pintar(35, 4, txt_modo)
-            pintar(36, 4, " \033[90m/save, /play <nom> | /loop <song|list|off> | /fx <bass|lofi|clear> | /color <N>\033[0m")
+            pintar(36, 4, " \033[90m/save, /play, /quitar <nom/N> | /loop | /fx | /color | /refresh\033[0m")
             if input_mode: pintar(37, 4, f" \033[1;37m> {input_buffer}█\033[0m{' '*(60-len(input_buffer))}")
             else: pintar(37, 4, " "*80)
 
@@ -411,7 +439,7 @@ def main():
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, original_tty)
         mpv.terminate(); cava_proc.terminate()
-        print("\033[?25h\033[H\033[2J") # Mostrar cursor y limpiar
+        print("\033[?25h\033[H\033[2J")
 
 if __name__ == "__main__":
     main()
