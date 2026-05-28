@@ -6,12 +6,20 @@ from setuptools import setup
 from setuptools.command.install import install
 
 class PostInstallCommand(install):
-    """Instala, verifica módulos, compila C++, configura PATH y limpia."""
+    """Instala, verifica módulos, compila C++, configura PATH, íconos y limpia."""
     def run(self):
         try:
             print("\033[1;36m[*] Iniciando Instalación de TermiMusic v1.5 (Motor Híbrido)...\033[0m")
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             # --- PASO 0: LIMPIEZA PREVIA (Forzar instalación limpia) ---
+=======
+            # --- PASO 0: LIMPIEZA PREVIA ---
+>>>>>>> Stashed changes
+=======
+            # --- PASO 0: LIMPIEZA PREVIA ---
+>>>>>>> Stashed changes
             print("\033[1;34m[*] Limpiando compilaciones anteriores en la carpeta...\033[0m")
             for basura in ['build', 'dist', 'termimusic.egg-info', 'motor_media_c.so', '__pycache__']:
                 if os.path.exists(basura):
@@ -21,11 +29,27 @@ class PostInstallCommand(install):
                         os.remove(basura)
             print("\033[1;32m[+] Entorno limpio y listo para compilar.\033[0m")
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             # 1. Verificación estricta de todos los archivos del motor modular y assets
             archivos_requeridos = [
                 'main.py', 'config.py', 'motor_media_bridge.py',
                 'motor_comandos.py', 'motor_grafico.py', 'motor_media.cpp',
                 'animacion.txt' # <-- AHORA EXIGE LA ANIMACIÓN
+=======
+            # 1. Verificación estricta del código fuente y assets
+            archivos_requeridos = [
+                'main.py', 'config.py', 'motor_media_bridge.py',
+                'motor_comandos.py', 'motor_grafico.py', 'motor_media.cpp',
+                'animacion.txt'
+>>>>>>> Stashed changes
+=======
+            # 1. Verificación estricta del código fuente y assets
+            archivos_requeridos = [
+                'main.py', 'config.py', 'motor_media_bridge.py',
+                'motor_comandos.py', 'motor_grafico.py', 'motor_media.cpp',
+                'animacion.txt'
+>>>>>>> Stashed changes
             ]
             print("\033[1;34m[*] Comprobando integridad del código fuente...\033[0m")
             for arc in archivos_requeridos:
@@ -33,7 +57,7 @@ class PostInstallCommand(install):
                     raise FileNotFoundError(f"Falta un archivo vital del motor o asset: {arc}. Verifica tu carpeta.")
             print("\033[1;32m[+] Todos los módulos y assets están presentes.\033[0m")
 
-            # 2. Compilación nativa del motor C++ (motor_media_c.so)
+            # 2. Compilación nativa del motor C++
             print("\033[1;34m[*] Compilando el motor de media C++ con máxima optimización...\033[0m")
             if shutil.which("g++") is None:
                 raise RuntimeError("No se encontró el compilador 'g++'.")
@@ -45,6 +69,8 @@ class PostInstallCommand(install):
             # 3. Instalación estándar de Python
             install.run(self)
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             # 4. Mover el binario compilado (.so) y la animación a la ruta final
             target_dir = self.install_lib
             print(f"\033[1;34m[*] Inyectando binario C++ y arte ASCII en el sistema...\033[0m")
@@ -73,13 +99,52 @@ class PostInstallCommand(install):
                 if os.path.exists(cookie_file):
                     os.remove(cookie_file)
                 print("\033[1;33m[!] Entendido. No se usarán cookies del navegador.\033[0m\n")
+=======
+            # 4. Mover el binario compilado y la animación
+            target_dir = self.install_lib
+            print(f"\033[1;34m[*] Inyectando binario C++ y arte ASCII en el sistema...\033[0m")
+            shutil.copy("motor_media_c.so", target_dir)
+            shutil.copy("animacion.txt", target_dir)
+>>>>>>> Stashed changes
 
-            # 5. Inyección de PATH en la Shell
+=======
+            # 4. Mover el binario compilado y la animación
+            target_dir = self.install_lib
+            print(f"\033[1;34m[*] Inyectando binario C++ y arte ASCII en el sistema...\033[0m")
+            shutil.copy("motor_media_c.so", target_dir)
+            shutil.copy("animacion.txt", target_dir)
+
+>>>>>>> Stashed changes
+            # --- CONFIGURACIÓN DE COOKIES ---
+            print("\n\033[1;35m" + "="*50)
+            print("🔧 CONFIGURACIÓN DE YOUTUBE (ANTI-BLOQUEOS)")
+            print("="*50 + "\033[0m")
+            print("Para evitar restricciones de edad o captchas, TermiMusic puede")
+            print("usar las cookies de tu navegador principal.")
+            print("\033[1;36mOpciones válidas:\033[0m firefox, chrome, brave, edge, opera, vivaldi")
+
+            nav = input(">> ¿Qué navegador usas? (Escribe 'none' o presiona ENTER para omitir): ").strip().lower()
+
+            cfg_dir = os.path.expanduser("~/.config/termimusic")
+            os.makedirs(cfg_dir, exist_ok=True)
+            cookie_file = os.path.join(cfg_dir, "navegador.conf")
+
+            if nav and nav != 'none':
+                with open(cookie_file, "w") as f:
+                    f.write(nav)
+                print(f"\033[1;32m[+] ¡Listo! TermiMusic clonará las cookies de: {nav.capitalize()}\033[0m\n")
+            else:
+                if os.path.exists(cookie_file):
+                    os.remove(cookie_file)
+                print("\033[1;33m[!] Entendido. No se usarán cookies del navegador.\033[0m\n")
+
+            # 5. Inyección de PATH Multi-Shell (Bash, Zsh, Fish)
             user_bin = os.path.expanduser("~/.local/bin")
-            path_line = f'\n# TermiMusic Path\nexport PATH="{user_bin}:$PATH"\n'
-            configs = [".bashrc", ".zshrc", ".bash_profile", ".profile"]
+            print("\033[1;34m[*] Configurando variables de entorno (PATH)...\033[0m")
 
-            for config in configs:
+            # Para Bash / Zsh
+            path_line = f'\n# TermiMusic Path\nexport PATH="{user_bin}:$PATH"\n'
+            for config in [".bashrc", ".zshrc", ".bash_profile", ".profile"]:
                 config_path = os.path.expanduser(f"~/{config}")
                 if os.path.exists(config_path):
                     with open(config_path, "r") as f:
@@ -88,16 +153,23 @@ class PostInstallCommand(install):
                         with open(config_path, "a") as f:
                             f.write(path_line)
 
-            # 6. Creación del Lanzador de Aplicaciones (.desktop)
+            # Para Fish (Automático)
+            if shutil.which("fish"):
+                print("\033[1;32m[+] Detectado Fish Shell, aplicando configuración nativa...\033[0m")
+                os.system(f'fish -c "fish_add_path {user_bin} >/dev/null 2>&1"')
+
+            # 6. Creación del Lanzador de Aplicaciones (.desktop) dinámico
+            print("\033[1;34m[*] Generando acceso directo gráfico...\033[0m")
             desktop_dir = os.path.expanduser("~/.local/share/applications")
             os.makedirs(desktop_dir, exist_ok=True)
             desktop_file = os.path.join(desktop_dir, "termimusic.desktop")
 
-            desktop_content = """[Desktop Entry]
+            # Usamos f-string para inyectar la ruta absoluta del usuario automáticamente
+            desktop_content = f"""[Desktop Entry]
 Type=Application
 Name=TermiMusic v1.5
-Comment=Physics-driven Terminal Music Player (Hybrid Engine)
-Exec=termimusic
+Comment=Tienda de Vinilos Retro (Hybrid Engine)
+Exec={user_bin}/termimusic
 Icon=utilities-terminal
 Terminal=true
 Categories=AudioVideo;Audio;Player;
@@ -105,6 +177,20 @@ Categories=AudioVideo;Audio;Player;
             with open(desktop_file, "w") as f:
                 f.write(desktop_content)
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> Stashed changes
+            # Actualizamos la caché de íconos del sistema si el comando existe
+            if shutil.which("update-desktop-database"):
+                os.system(f"update-desktop-database {desktop_dir}")
+                print("\033[1;32m[+] Caché de íconos actualizada.\033[0m")
+
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
             # 7. Comprobación de dependencias
             missing_deps = []
             for dep in ['mpv', 'cava', 'socat', 'yt-dlp', 'g++']:
@@ -136,7 +222,7 @@ Categories=AudioVideo;Audio;Player;
             print("\033[1;32m" + "="*50)
             print("         INSTALACIÓN COMPLETADA CON ÉXITO")
             print("="*50 + "\033[0m")
-            print("\033[1;36mVersión :\033[0m 1.5.0 (Release)")
+            print("\033[1;36mVersión :\033[0m 1.6.0 (Release)")
             print("\033[1;36mCreador :\033[0m DarknessQ2 ")
             print("\033[1;36mContacto:\033[0m vendiluis11@gmail.com")
             print("\033[1;32m" + "-" * 50 + "\033[0m")
@@ -147,7 +233,7 @@ Categories=AudioVideo;Audio;Player;
                 print("\033[1;32m" + "-" * 50 + "\033[0m")
 
             print("¡Todo listo! El ecosistema modular está instalado.")
-            print("Inicia el reproductor desde tu terminal ejecutando:")
+            print("Inicia el reproductor desde el menú de aplicaciones o terminal:")
             print("  \033[1;33m$ termimusic\033[0m")
             print("\033[1;32m" + "="*50 + "\033[0m\n")
 
