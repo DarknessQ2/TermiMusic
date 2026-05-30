@@ -17,43 +17,52 @@ A highly customizable, physics-driven terminal music player for Linux. Built for
 
 ## Prerequisites
 Ensure you have the following system dependencies installed (Arch Linux example):
-\`\`\`bash
-sudo pacman -S mpv cava socat python
-\`\`\`
+
+```bash
+sudo pacman -S --needed base-devel mpv cava socat python
+```
+
+> ⚠️ **Important:** The `base-devel` package (or your distro's equivalent, like `build-essential` on Ubuntu) is **mandatory**. Without it, the installation will fail with a `RuntimeError: No se encontró el compilador: 'g++'`.
 
 ## Installation
 
-1. Clone the repository:
-\`\`\`bash
-git clone https://github.com/DarknessQ2/TermiMusic
-cd TermiMusic
-\`\`\`
+1. **Clone the repository:**
+```bash
+   git clone [https://github.com/DarknessQ2/TermiMusic](https://github.com/DarknessQ2/TermiMusic)
+   cd TermiMusic
+   ```
 
-2. Install via Python (Using PIP or PIPX):
-\`\`\`bash
-# If your environment is externally managed, use pipx:
-pipx install .
+2. **Set up the environment and install dependencies:**
+```bash
+   # Create and activate a virtual environment
+   python -m venv venv
+   source venv/bin/activate
 
-# Or using standard pip (in a venv or with break-system-packages if preferred)
-pip install .
-\`\`\`
+   # Install project dependencies
+   pip install -r requirements.txt
+   ```
+
+3. **Install the package locally:**
+```bash
+   python3 setup.py install --user
+   ```
 
 ## Usage
-Simply run the command from anywhere in your terminal:
-\`\`\`bash
+Simply run the command from your terminal:
+
+```bash
 termimusic
-\`\`\`
+```
 
-### Controls & Commands
-* `Space`: Play/Pause
-* `p` / `o`: Next / Previous Track
-* `+` / `-`: Volume Up / Down
-* `/`: Enter Command Mode
+## Controls & Commands
 
-**In Command Mode:**
-* Load URL/File: Just paste the link and press Enter.
-* `/color <0-255>`: Change visualizer color.
-* `/fx <bass|lofi|clear>`: Apply audio filters.
-* `/loop <song|list|off>`: Toggle loop mode.
-* `/save <name>`: Save current queue as a playlist.
-* `/play <name>`: Load a saved playlist.
+### Keybindings
+* **`Space`** : Play / Pause
+* **`p` / `o`** : Next / Previous Track
+* **`+` / `-`** : Volume Up / Down
+* **`/`** : Enter Command Mode
+
+### Command Mode
+After pressing `/`, you can execute the following actions:
+* **Load URL/File** : Just paste the link/path and press `Enter`.
+* **`/color <0-255>`** : Change the visualizer color dynamically.
