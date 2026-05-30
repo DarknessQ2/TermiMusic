@@ -3,7 +3,7 @@
 A highly customizable, physics-driven terminal music player for Linux. Built for ricing environments (like custom Wayland window managers).
 
 <p align="center">
-  <img src="asset3.gif/a" alt="TermiMusic Screenshot" width="800">
+ <img src="assets/asset3.gif" alt="TermiMusic Screenshot" width="800">
 </p>
 
 ## Features
