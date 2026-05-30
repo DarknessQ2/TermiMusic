@@ -16,13 +16,22 @@ A highly customizable, physics-driven terminal music player for Linux. Built for
     <img src="assets/asset6.gif" alt="Audio Visualizer" width="400">
   </p>
 * **High-Res Terminal Art**: Fetches YouTube thumbnails and renders them into the terminal using TrueColor ANSI blocks.
+  <p align="left">
+    <img src="assets/asset7.png" alt="High-Res Terminal Art" width="400">
+  </p>
 * **System Stats Module**: Real-time CPU, RAM, and Temperature monitoring.
+  <p align="left">
+    <img src="assets/asset8.png" alt="System Stats Module" width="400">
+  </p>
 * **Discord Rich Presence**: Let your friends know what you're listening to.
   <p align="left">
     <img src="assets/asset4.png" alt="Discord Rich Presence Status" width="400">
   </p>
 * **Audio FX**: Built-in bass boost and lo-fi filters.
 * **Playlist Manager**: Save and load custom queues dynamically.
+  <p align="left">
+    <img src="assets/asset9.png" alt="Playlist Manager" width="400">
+  </p>
 
 ## Prerequisites
 Ensure you have the following system dependencies installed (Arch Linux example):
