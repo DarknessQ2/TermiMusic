@@ -3,7 +3,7 @@
 A highly customizable, physics-driven terminal music player for Linux. Built for ricing environments (like custom Wayland window managers).
 
 <p align="center">
- <img src="assets/asset3.gif" alt="TermiMusic Screenshot" width="800">
+  <img src="assets/aset1.png" alt="TermiMusic Screenshot" width="800">
 </p>
 
 ## Features
@@ -12,6 +12,9 @@ A highly customizable, physics-driven terminal music player for Linux. Built for
 * **High-Res Terminal Art**: Fetches YouTube thumbnails and renders them into the terminal using TrueColor ANSI blocks.
 * **System Stats Module**: Real-time CPU, RAM, and Temperature monitoring.
 * **Discord Rich Presence**: Let your friends know what you're listening to.
+  <p align="left">
+    <img src="assets/asset4.png" alt="Discord Rich Presence Status" width="400">
+  </p>
 * **Audio FX**: Built-in bass boost and lo-fi filters.
 * **Playlist Manager**: Save and load custom queues dynamically.
 
