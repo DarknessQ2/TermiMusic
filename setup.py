@@ -178,16 +178,20 @@ class CustomDevelopCommand(develop):
 setup(
     name='termimusic',
     version='1.6.0',
-<<<<<<< HEAD
-    py_modules=['main', 'config', 'motor_media_bridge', 'motor_comandos', 'motor_grafico'],
-=======
-    py_modules=['main', 'config', 'motor_media_bridge', 'motor_comandos', 'motor_grafico','motor_lyrics'],
->>>>>>> 796d299 (feat: upgrade to 1.7.0 - Support for lyrics, album art, and liryc and caratule management (quitar))
+    py_modules=[
+        'main',
+        'config',
+        'motor_media_bridge',
+        'motor_comandos',
+        'motor_grafico',
+        'motor_lyrics'
+    ],
     install_requires=[
         'Pillow>=9.0.0',
         'psutil>=5.8.0',
         'pypresence>=4.2.1'
     ],
+
     cmdclass={
         'install': CustomInstallCommand,
         'develop': CustomDevelopCommand,
