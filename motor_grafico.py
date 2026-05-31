@@ -38,6 +38,13 @@ DISCO_DETALLADO = [
     "                    .. ......... . ."
 ]
 
+# 🛠️ FIX: Función dedicada para limpieza extrema de residuos
+def limpiar_pantalla():
+    """Limpieza extrema: borra pantalla, buffer, y resetea cursor."""
+    os.system("clear" if os.name == "posix" else "cls")
+    sys.stdout.write("\033[2J\033[3J\033[H")
+    sys.stdout.flush()
+
 def cargar_animacion():
     global DISCO_ANIM
     ruta_local = os.path.join(os.path.dirname(__file__), "animacion.txt")
@@ -61,7 +68,7 @@ def format_tiempo(s):
 
 def scroll_texto(texto, ancho, paso):
     if len(texto) <= ancho: return f"{texto:<{ancho}}"
-    pad = texto + "    •   "
+    pad = texto + "    •    "
     offset = int(paso) % len(pad)
     return (pad[offset:] + pad[offset:offset])[:ancho]
 
@@ -118,7 +125,7 @@ def actualizar_miniatura(path):
 def render_menu_vinilos(playlists_web, playlists_locales, seleccion_idx, agarrado, frame_caida):
     todas = playlists_web + playlists_locales
 
-    print("\033[2J\033[H", end="") # Limpiar pantalla
+    sys.stdout.write("\033[2J\033[H") # Limpieza suave para animación del menú
 
     # Determinar paleta según el bloque dinámico
     if cfg.Estado.modo_dinamico:
@@ -140,7 +147,6 @@ def render_menu_vinilos(playlists_web, playlists_locales, seleccion_idx, agarrad
         return
 
     # --- 1. TOCADISCOS ---
-    # 🔄 CONECTADO: Usa la configuración persistente global
     color_toca = "\033[1;32m" if agarrado else (ansi_color if cfg.Estado.modo_dinamico else "\033[1;34m")
     toca_r, toca_c = 28, 45
     pintar(toca_r, toca_c,   " ┌────────────────────────┐ ", color_toca)
@@ -149,7 +155,6 @@ def render_menu_vinilos(playlists_web, playlists_locales, seleccion_idx, agarrad
     pintar(toca_r+3, toca_c, " └────────────────────────┘ ", color_toca)
 
     # --- 2. LA CAJA DE DISCOS ---
-    # 🔄 CONECTADO: Usa la configuración persistente global
     caja_r, caja_c = 6, 4
     color_caja = ansi_color if cfg.Estado.modo_dinamico else "\033[1;33m"
     pintar(caja_r, caja_c, " ┌──[ CAJA DE DISCOS ]──────┐", color_caja)
@@ -174,7 +179,6 @@ def render_menu_vinilos(playlists_web, playlists_locales, seleccion_idx, agarrad
     # --- 3. MOSTRADOR DEL DISCO ---
     visor_r, visor_c = 6, 40
     es_web_sel = seleccion_idx < len(playlists_web)
-    # 🔄 CONECTADO: Usa la configuración persistente global
     color_disco = ansi_color if cfg.Estado.modo_dinamico else ("\033[1;35m" if es_web_sel else "\033[1;36m")
     etiq_sel = "WEB" if es_web_sel else "LOC"
     nom_sel = todas[seleccion_idx].replace(".json", "")

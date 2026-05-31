@@ -1,0 +1,59 @@
+=== ERROR DE INSTALACIÓN - TERMIMUSIC v1.5 ===
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/file_util.py", line 39, in _copy_file_contents
+    fdst = open(dst, 'wb')
+PermissionError: [Errno 13] Permission denied: '/usr/lib/python3.14/site-packages/main.py'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/minegrosa/termusic.1.5/setup.py", line 46, in run
+    install.run(self)
+    ~~~~~~~~~~~^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/command/install.py", line 700, in run
+    self.run_command(cmd_name)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/cmd.py", line 341, in run_command
+    self.distribution.run_command(command)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/dist.py", line 1107, in run_command
+    super().run_command(command)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/dist.py", line 1019, in run_command
+    cmd_obj.run()
+    ~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/site-packages/setuptools/command/install_lib.py", line 20, in run
+    outfiles = self.install()
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/command/install_lib.py", line 118, in install
+    outfiles = self.copy_tree(self.build_dir, self.install_dir)
+  File "/usr/lib/python3.14/site-packages/setuptools/command/install_lib.py", line 110, in copy_tree
+    return orig.install_lib.copy_tree(self, infile, outfile)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/cmd.py", line 426, in copy_tree
+    return dir_util.copy_tree(
+           ~~~~~~~~~~~~~~~~~~^
+        infile,
+        ^^^^^^^
+    ...<4 lines>...
+        not self.force,
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/dir_util.py", line 144, in copy_tree
+    return list(itertools.chain.from_iterable(map(copy_one, names)))
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/dir_util.py", line 183, in _copy_one
+    file_util.copy_file(
+    ~~~~~~~~~~~~~~~~~~~^
+        src_name,
+        ^^^^^^^^^
+    ...<4 lines>...
+        verbose=verbose,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/file_util.py", line 152, in copy_file
+    _copy_file_contents(src, dst)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/lib/python3.14/site-packages/setuptools/_distutils/file_util.py", line 41, in _copy_file_contents
+    raise DistutilsFileError(f"could not create '{dst}': {e.strerror}")
+distutils.errors.DistutilsFileError: could not create '/usr/lib/python3.14/site-packages/main.py': Permission denied
